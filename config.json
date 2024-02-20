@@ -1,0 +1,8 @@
+{
+  "startUrls": [
+    "https://example.com"
+  ],
+  "minConcurrency": 10,
+  "maxConcurrency": 30,
+  "maxRequestsPerCrawl": null
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@eheikes/website-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Website scraper",
+  "dependencies": {
+    "content-type": "^1.0.5",
+    "crawlee": "^3.0.0"
+  },
+  "devDependencies": {
+    "@apify/tsconfig": "^0.1.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.4.0",
+    "typescript": "~5.3.0"
+  },
+  "scripts": {
+    "start": "npm run start:dev",
+    "start:prod": "node dist/main.js",
+    "start:dev": "tsx src/main.ts",
+    "build": "tsc"
+  },
+  "author": "Eric Heikes <eheikes@gmail.com>",
+  "license": "Apache-2.0"
+}
