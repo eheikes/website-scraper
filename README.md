@@ -5,9 +5,15 @@ This is a [crawlee](https://crawlee.dev/) app for scraping a website. It builds 
 * It was adapted from the `Crawlee + CherioCrawler + Typescript` template.
 * It does not support Javascript-heavy websites or SPAs.
 
-## Usage
+## Install
+
+Requires [Node.js+npm](https://nodejs.org).
 
 1. Download or clone this project.
+1. Run `npm install` on the command line in the folder.
+
+## Usage
+
 1. Modify the `config.json` file as needed.
 1. Run `npm start`, or run `npm run build` then `npm run start:prod`.
 
