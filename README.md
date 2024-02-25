@@ -22,6 +22,7 @@ Requires [Node.js+npm](https://nodejs.org).
     * `persistStorage` (boolean) -- Whether or not to keep a cache. This should usually be `true`.
     * `purgeOnStart` (boolean) -- Whether or not to delete the data collection when starting the scraper.
     * `requestHandlerTimeoutSecs` (number) -- How long to wait (in seconds) for the website to respond. Increase this for larger pages/assets or slower sites.
+    * `sitemap` (text) -- URL of a sitemap.xml file that contains URLs to crawl.
 1. Run `npm start`, or run `npm run build` then `npm run start:prod`.
 
 The resulting dataset will be in the `storage/datasets/default/` folder.

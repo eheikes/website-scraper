@@ -1,4 +1,4 @@
-import { Configuration, HttpCrawler, log } from 'crawlee'
+import { Configuration, HttpCrawler, log, Sitemap } from 'crawlee'
 import pick from 'lodash.pick'
 import { readFile } from 'fs/promises'
 import { router } from './routes.js'
@@ -29,5 +29,13 @@ const crawler = new HttpCrawler({
 
   additionalMimeTypes: ['*/*']
 }, new Configuration(crawlerConfig))
+
+if (config.sitemap) {
+  const { urls } = await Sitemap.load(config.sitemap)
+  for (const url of urls) {
+    log.info(`enqueueing new URL from sitemap`, { url })
+    await crawler.addRequests([url])
+  }
+}
 
 await crawler.run(config.startUrls)
