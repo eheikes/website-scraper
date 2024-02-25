@@ -14,7 +14,14 @@ Requires [Node.js+npm](https://nodejs.org).
 
 ## Usage
 
-1. Modify the `config.json` file as needed.
+1. Modify the `config.json` file as needed. The following options are supported:
+    * `minConcurrency` (number) -- The minimum number of parallel requests that can run at any given time.
+    * `maxConcurrency` (number) -- The maximum number of parallel requests that can run at any given time.
+    * `maxRequestRetries` (number) -- The maximum number of times to retry a URL.
+    * `maxRequestsPerCrawl` (number) -- The maximum number of URLs that the scraper will crawl. This should usually be `null` except when testing.
+    * `persistStorage` (boolean) -- Whether or not to keep a cache. This should usually be `true`.
+    * `purgeOnStart` (boolean) -- Whether or not to delete the data collection when starting the scraper.
+    * `requestHandlerTimeoutSecs` (number) -- How long to wait (in seconds) for the website to respond. Increase this for larger pages/assets or slower sites.
 1. Run `npm start`, or run `npm run build` then `npm run start:prod`.
 
 The resulting dataset will be in the `storage/datasets/default/` folder.

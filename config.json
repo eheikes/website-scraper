@@ -2,7 +2,11 @@
   "startUrls": [
     "https://example.com"
   ],
+  "persistStorage": true,
+  "purgeOnStart": false,
   "minConcurrency": 10,
   "maxConcurrency": 30,
+  "maxRequestRetries": 1,
+  "requestHandlerTimeoutSecs": 30,
   "maxRequestsPerCrawl": null
 }
