@@ -19,6 +19,8 @@ Requires [Node.js+npm](https://nodejs.org).
     * `maxConcurrency` (number) -- The maximum number of parallel requests that can run at any given time.
     * `maxRequestRetries` (number) -- The maximum number of times to retry a URL.
     * `maxRequestsPerCrawl` (number) -- The maximum number of URLs that the scraper will crawl. This should usually be `null` except when testing.
+    * `csvExport` (text) -- Base filename (no extension or path) to export the entire data collection to, when finished. It will save the file in the `storage/key_value_stores/default/` folder, formatted as CSV with a `.csv` extension.
+    * `jsonExport` (text) -- Base filename (no extension or path) to export the entire data collection to, when finished. It will save the file in the `storage/key_value_stores/default/` folder, formatted as JSON with a `.json` extension.
     * `persistStorage` (boolean) -- Whether or not to keep a cache. This should usually be `true`.
     * `purgeOnStart` (boolean) -- Whether or not to delete the data collection when starting the scraper.
     * `requestHandlerTimeoutSecs` (number) -- How long to wait (in seconds) for the website to respond. Increase this for larger pages/assets or slower sites.

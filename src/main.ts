@@ -1,4 +1,4 @@
-import { Configuration, HttpCrawler, log, Sitemap } from 'crawlee'
+import { Configuration, Dataset, HttpCrawler, log, Sitemap } from 'crawlee'
 import pick from 'lodash.pick'
 import { readFile } from 'fs/promises'
 import { router } from './routes.js'
@@ -17,6 +17,7 @@ const configKeys = [
 const configContents = await readFile('./config.json', 'utf-8')
 const config: Record<string, any> = JSON.parse(configContents)
 
+// Init the crawler.
 const crawlerContext: Pick<typeof config, typeof contextKeys[number]> = pick(config, contextKeys)
 const crawlerConfig: Pick<typeof config, typeof configKeys[number]> = pick(config, configKeys)
 const crawler = new HttpCrawler({
@@ -30,6 +31,7 @@ const crawler = new HttpCrawler({
   additionalMimeTypes: ['*/*']
 }, new Configuration(crawlerConfig))
 
+// Also scrape from the sitemap, if given.
 if (config.sitemap) {
   const { urls } = await Sitemap.load(config.sitemap)
   for (const url of urls) {
@@ -38,4 +40,13 @@ if (config.sitemap) {
   }
 }
 
+// Run the crawler.
 await crawler.run(config.startUrls)
+
+// Export to CSV and/or JSON, if specified.
+if (config.csvExport) {
+  await Dataset.exportToCSV(config.csvExport)
+}
+if (config.jsonExport) {
+  await Dataset.exportToJSON(config.jsonExport)
+}
