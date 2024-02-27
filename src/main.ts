@@ -22,6 +22,7 @@ const crawlerContext: Pick<typeof config, typeof contextKeys[number]> = pick(con
 const crawlerConfig: Pick<typeof config, typeof configKeys[number]> = pick(config, configKeys)
 const crawler = new HttpCrawler({
   ...crawlerContext,
+  maxRequestsPerCrawl: crawlerContext.maxRequestsPerCrawl === null ? undefined : crawlerContext.maxRequestsPerCrawl,
 
   requestHandler: router,
   failedRequestHandler({ request }) {
