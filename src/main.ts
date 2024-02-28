@@ -8,7 +8,7 @@ const contextKeys = [
   'maxConcurrency',
   'maxRequestRetries',
   'maxRequestsPerCrawl',
-  'requestHandlerTimeoutSecs'
+  'navigationTimeoutSecs'
 ] as const
 const configKeys = [
   'persistStorage',

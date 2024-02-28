@@ -23,7 +23,7 @@ Requires [Node.js+npm](https://nodejs.org).
     * `jsonExport` (text) -- Base filename (no extension or path) to export the entire data collection to, when finished. It will save the file in the `storage/key_value_stores/default/` folder, formatted as JSON with a `.json` extension.
     * `persistStorage` (boolean) -- Whether or not to keep a cache. This should usually be `true`.
     * `purgeOnStart` (boolean) -- Whether or not to delete the data collection when starting the scraper.
-    * `requestHandlerTimeoutSecs` (number) -- How long to wait (in seconds) for the website to respond. Increase this for larger pages/assets or slower sites.
+    * `navigationTimeoutSecs` (number) -- How long to wait (in seconds) for the website to respond. Increase this for larger pages/assets or slower sites.
     * `sitemap` (text) -- URL of a sitemap.xml file that contains URLs to crawl.
 1. Run `npm start`, or run `npm run build` then `npm run start:prod`.
 
