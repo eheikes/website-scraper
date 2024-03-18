@@ -12,7 +12,7 @@
   "devDependencies": {
     "@apify/tsconfig": "^0.1.0",
     "@types/lodash.pick": "^4.4.9",
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.11.28",
     "tsx": "^4.4.0",
     "typescript": "~5.4.2"
   },
