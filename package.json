@@ -6,7 +6,7 @@
   "description": "Website scraper",
   "dependencies": {
     "content-type": "^1.0.5",
-    "crawlee": "^3.13.2",
+    "crawlee": "^3.13.3",
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
