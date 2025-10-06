@@ -14,7 +14,7 @@
     "@types/lodash.pick": "^4.4.9",
     "@types/node": "^24.5.2",
     "tsx": "^4.20.6",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.3"
   },
   "scripts": {
     "start": "npm run start:dev",
