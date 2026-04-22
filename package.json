@@ -10,7 +10,7 @@
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
-    "@apify/tsconfig": "^0.1.1",
+    "@apify/tsconfig": "^0.1.2",
     "@types/lodash.pick": "^4.4.9",
     "@types/node": "^25.6.0",
     "tsx": "^4.21.0",
