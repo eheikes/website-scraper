@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Website scraper",
   "dependencies": {
-    "content-type": "^1.0.5",
+    "content-type": "^2.0.0",
     "crawlee": "^3.16.0",
     "lodash.pick": "^4.4.0"
   },
