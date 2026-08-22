@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Website scraper",
   "dependencies": {
-    "content-type": "^2.0.0",
-    "crawlee": "^3.18.0",
+    "content-type": "^2.1.0",
+    "crawlee": "^3.18.1",
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
