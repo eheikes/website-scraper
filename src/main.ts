@@ -1,6 +1,6 @@
 import { Configuration, Dataset, HttpCrawler, log, Sitemap } from 'crawlee'
-import pick from 'lodash.pick'
 import { readFile } from 'fs/promises'
+import pick from 'lodash/pick.js'
 import { router } from './routes.js'
 
 const contextKeys = [
