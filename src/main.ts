@@ -1,4 +1,4 @@
-import { Configuration, Dataset, HttpCrawler, log, Sitemap } from 'crawlee'
+import { Configuration, Dataset, HttpCrawler, log, Sitemap, LogLevel } from 'crawlee'
 import { readFile } from 'fs/promises'
 import pick from 'lodash/pick.js'
 import { router } from './routes.js'
@@ -24,13 +24,24 @@ const crawler = new HttpCrawler({
   ...crawlerContext,
   maxRequestsPerCrawl: crawlerContext.maxRequestsPerCrawl === null ? undefined : crawlerContext.maxRequestsPerCrawl,
 
+  preNavigationHooks: [
+    (_crawlingContext, gotOptions) => {
+      // Disable HTTP/2 to prevent GOAWAY and NGHTTP2_REFUSED_STREAM multiplexing issues
+      gotOptions.http2 = false
+    }
+  ],
+
   requestHandler: router,
-  failedRequestHandler({ request }) {
+  failedRequestHandler({ request, err }) {
     log.warning(`Request ${request.url} failed!`)
+    if (err) { log.warning(String(err)) }
   },
 
-  additionalMimeTypes: ['*/*']
-}, new Configuration(crawlerConfig))
+  additionalMimeTypes: ['*/*'],
+}, new Configuration({
+  ...crawlerConfig,
+  logLevel: LogLevel.DEBUG,
+}))
 
 // Also scrape from the sitemap, if given.
 if (config.sitemap) {

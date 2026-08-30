@@ -1,26 +1,27 @@
-import { dirname, resolve } from 'path'
 import { Handler } from '../types.js'
-import { sameDomainAs, toAbsoluteUrl } from '../util.js'
+import { normalizeUrl, sameDomainAs } from '../util.js'
 
 export const handle: Handler = async (request, body) => {
-  const parsedUrl = new URL(request.url)
+  const baseUrl = request.loadedUrl || request.url
+  const parsedUrl = new URL(baseUrl)
+  const isSameDomain = sameDomainAs(parsedUrl.hostname)
 
   const matches = body.toString().matchAll(/\burl\(['"]?(.*?)['"]?\)/g)
-  let urls = []
+  const urls: string[] = []
   for (const match of matches) {
-    const url = match[1]
-    if (url.startsWith('data:')) { continue }
-    const basePath = dirname(parsedUrl.pathname) // CSS URLs are relative to the file they are defined in
-    const absoluteUrl = toAbsoluteUrl(parsedUrl.origin)(resolve(basePath, url))
-    if (!sameDomainAs(parsedUrl.hostname)(absoluteUrl)) { continue }
-    urls.push(absoluteUrl)
+    const rawUrl = match[1]
+    const normalized = normalizeUrl(rawUrl, baseUrl)
+    if (normalized && isSameDomain(normalized)) {
+      urls.push(normalized)
+    }
   }
 
   return {
-    links: urls,
+    links: Array.from(new Set(urls)),
     data: {
       type: 'text',
       content: body.toString()
     }
   }
 }
+
