@@ -1,7 +1,7 @@
 export const normalizeUrl = (rawUrl: string | undefined | null, baseUrl: string): string | null => {
-  if (!rawUrl || typeof rawUrl !== 'string') return null
+  if (typeof rawUrl !== 'string') return null
   const trimmed = rawUrl.trim()
-  if (!trimmed) return null
+  if (trimmed === '') return null
 
   // Filter out non-http(s) schemes like mailto:, javascript:, tel:, data:
   if (/^(mailto:|javascript:|tel:|data:|blob:|sms:|callto:)/i.test(trimmed)) {
@@ -35,4 +35,3 @@ export const sameDomainAs = (domainToMatch: string) => (url: string): boolean =>
     return false
   }
 }
-

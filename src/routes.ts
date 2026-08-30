@@ -33,7 +33,7 @@ router.addDefaultHandler(async (context) => {
 
   let contentType = 'application/octet-stream'
   const rawContentType = response.headers['content-type']
-  if (rawContentType) {
+  if (rawContentType !== undefined && rawContentType !== null) {
     try {
       contentType = parse(String(rawContentType)).type
     } catch {
@@ -41,17 +41,17 @@ router.addDefaultHandler(async (context) => {
     }
   }
 
-  log.info(`Processing URL`, { url: request.url, contentType })
+  log.info('Processing URL', { url: request.url, contentType })
 
   const handler = handlers.get(contentType)
-  if (handler) {
+  if (handler != null) {
     const handledContent = await handler(request, body, parseWithCheerio)
     if (handledContent.links.length > 0) {
       await crawler.addRequests(handledContent.links)
     }
     await pushData({
       ...handledContent.data,
-      url: request.loadedUrl || request.url,
+      url: request.loadedUrl !== '' ? request.loadedUrl : request.url,
       headers: response.headers,
       mimeType: contentType,
       size: body.length
@@ -63,11 +63,10 @@ router.addDefaultHandler(async (context) => {
     const handledContent = await handleBinary(request, body, parseWithCheerio)
     await pushData({
       ...handledContent.data,
-      url: request.loadedUrl || request.url,
+      url: request.loadedUrl !== '' ? request.loadedUrl : request.url,
       headers: response.headers,
       mimeType: contentType,
       size: body.length
     })
   }
 })
-

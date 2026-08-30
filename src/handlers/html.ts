@@ -2,7 +2,7 @@ import { Handler } from '../types.js'
 import { normalizeUrl, sameDomainAs } from '../util.js'
 
 export const handle: Handler = async (request, body, parseWithCheerio) => {
-  const baseUrl = request.loadedUrl || request.url
+  const baseUrl = request.loadedUrl ?? request.url
   const parsedUrl = new URL(baseUrl)
   const isSameDomain = sameDomainAs(parsedUrl.hostname)
 
@@ -26,10 +26,10 @@ export const handle: Handler = async (request, body, parseWithCheerio) => {
 
   const styleUrls: string[] = []
   $('[style*="url("]').each((_, el) => {
-    const styleAttr = $(el).attr('style') || ''
+    const styleAttr = $(el).attr('style') ?? ''
     const matches = styleAttr.matchAll(/\burl\(['"]?(.*?)['"]?\)/g)
     for (const match of matches) {
-      if (match[1]) {
+      if (match[1] !== '') {
         styleUrls.push(match[1])
       }
     }
@@ -56,7 +56,7 @@ export const handle: Handler = async (request, body, parseWithCheerio) => {
   const validUrls: string[] = []
   for (const rawUrl of rawUrls) {
     const normalized = normalizeUrl(rawUrl, baseUrl)
-    if (normalized && isSameDomain(normalized)) {
+    if (normalized !== null && isSameDomain(normalized)) {
       validUrls.push(normalized)
     }
   }
@@ -69,4 +69,3 @@ export const handle: Handler = async (request, body, parseWithCheerio) => {
     }
   }
 }
-
