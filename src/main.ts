@@ -24,6 +24,13 @@ const crawler = new HttpCrawler({
   ...crawlerContext,
   maxRequestsPerCrawl: crawlerContext.maxRequestsPerCrawl === null ? undefined : crawlerContext.maxRequestsPerCrawl,
 
+  preNavigationHooks: [
+    (_crawlingContext, gotOptions) => {
+      // Disable HTTP/2 to prevent GOAWAY and NGHTTP2_REFUSED_STREAM multiplexing issues
+      gotOptions.http2 = false
+    }
+  ],
+
   requestHandler: router,
   failedRequestHandler({ request, err }) {
     log.warning(`Request ${request.url} failed!`)
