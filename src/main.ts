@@ -39,19 +39,19 @@ const crawler = new HttpCrawler({
   ],
 
   requestHandler: router,
-  failedRequestHandler({ request, err }) {
+  failedRequestHandler ({ request, err }) {
     log.warning(`Request ${request.url} failed!`)
-    if (err) { log.warning(String(err)) }
+    if (err !== undefined && err !== null) { log.warning(String(err)) }
   },
 
-  additionalMimeTypes: ['*/*'],
+  additionalMimeTypes: ['*/*']
 })
 
 // Also scrape from the sitemap, if given.
-if (config.sitemap) {
+if (config.sitemap !== undefined && config.sitemap !== null) {
   const { urls } = await Sitemap.load(config.sitemap)
   for (const url of urls) {
-    log.info(`enqueueing new URL from sitemap`, { url })
+    log.info('enqueueing new URL from sitemap', { url })
     await crawler.addRequests([url])
   }
 }
@@ -60,9 +60,9 @@ if (config.sitemap) {
 await crawler.run(config.startUrls)
 
 // Export to CSV and/or JSON, if specified.
-if (config.csvExport) {
+if (config.csvExport !== undefined && config.csvExport !== null) {
   await Dataset.exportToCSV(config.csvExport)
 }
-if (config.jsonExport) {
+if (config.jsonExport !== undefined && config.jsonExport !== null) {
   await Dataset.exportToJSON(config.jsonExport)
 }

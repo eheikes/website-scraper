@@ -2,7 +2,7 @@ import { Handler } from '../types.js'
 import { normalizeUrl, sameDomainAs } from '../util.js'
 
 export const handle: Handler = async (request, body) => {
-  const baseUrl = request.loadedUrl || request.url
+  const baseUrl = request.loadedUrl ?? request.url
   const parsedUrl = new URL(baseUrl)
   const isSameDomain = sameDomainAs(parsedUrl.hostname)
 
@@ -11,7 +11,7 @@ export const handle: Handler = async (request, body) => {
   for (const match of matches) {
     const rawUrl = match[1]
     const normalized = normalizeUrl(rawUrl, baseUrl)
-    if (normalized && isSameDomain(normalized)) {
+    if (normalized !== null && isSameDomain(normalized)) {
       urls.push(normalized)
     }
   }
@@ -24,4 +24,3 @@ export const handle: Handler = async (request, body) => {
     }
   }
 }
-
