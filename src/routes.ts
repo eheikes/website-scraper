@@ -29,25 +29,45 @@ const handlers = new Map<string, Handler>([
 export const router = createHttpRouter()
 
 router.addDefaultHandler(async (context) => {
-    const { request, response, log, crawler, body, parseWithCheerio, pushData } = context
+  const { request, response, log, crawler, body, parseWithCheerio, pushData } = context
 
-    const parsedContentType = parse(String(response.headers['content-type']))
-    const contentType = parsedContentType.type
-
-    log.info(`enqueueing new URL`, { url: request.url, contentType })
-
-    const handler = handlers.get(contentType)
-    if (handler) {
-      const handledContent = await handler(request, body, parseWithCheerio)
-      await crawler.addRequests(handledContent.links)
-      await pushData({
-        ...handledContent.data,
-        url: request.loadedUrl || request.url,
-        headers: response.headers,
-        mimeType: contentType,
-        size: body.length
-      })
-    } else {
-      throw new Error(`No handler for content-type of "${contentType}"`)
+  let contentType = 'application/octet-stream'
+  const rawContentType = response.headers['content-type']
+  if (rawContentType) {
+    try {
+      contentType = parse(String(rawContentType)).type
+    } catch {
+      contentType = String(rawContentType).split(';')[0].trim().toLowerCase()
     }
+  }
+
+  log.info(`Processing URL`, { url: request.url, contentType })
+
+  const handler = handlers.get(contentType)
+  if (handler) {
+    const handledContent = await handler(request, body, parseWithCheerio)
+    if (handledContent.links.length > 0) {
+      await crawler.addRequests(handledContent.links)
+    }
+    await pushData({
+      ...handledContent.data,
+      url: request.loadedUrl || request.url,
+      headers: response.headers,
+      mimeType: contentType,
+      size: body.length
+    })
+  } else {
+    // Graceful fallback for unhandled MIME types (e.g. PDF, audio, video, web fonts)
+    // Avoids throwing errors that trigger unwanted crawler retries
+    log.debug(`No specific parser for "${contentType}", saving generic record`, { url: request.url })
+    const handledContent = await handleBinary(request, body, parseWithCheerio)
+    await pushData({
+      ...handledContent.data,
+      url: request.loadedUrl || request.url,
+      headers: response.headers,
+      mimeType: contentType,
+      size: body.length
+    })
+  }
 })
+
