@@ -1,9 +1,13 @@
 import { Handler } from '../types.js'
-import { sameDomainAs, toAbsoluteUrl } from '../util.js'
+import { normalizeUrl, sameDomainAs } from '../util.js'
 
 export const handle: Handler = async (request, body, parseWithCheerio) => {
-  const parsedUrl = new URL(request.url)
+  const baseUrl = request.loadedUrl || request.url
+  const parsedUrl = new URL(baseUrl)
+  const isSameDomain = sameDomainAs(parsedUrl.hostname)
+
   const $ = await parseWithCheerio()
+
   const links = $('a[href]')
     .map((_, el) => $(el).attr('href'))
     .get()
@@ -19,32 +23,50 @@ export const handle: Handler = async (request, body, parseWithCheerio) => {
   const forms = $('form[action]')
     .map((_, el) => $(el).attr('action'))
     .get()
-  const styles = $('[style*="url("]')
-    .map((_, el) => $(el).attr('style'))
-    .get()
-    .map((attr) => attr.replace(/^.*url\(['"]?(.*?)['"]?\).*$/, '$1'))
-  const ogUrls = $('meta[property="og:url"]')
+
+  const styleUrls: string[] = []
+  $('[style*="url("]').each((_, el) => {
+    const styleAttr = $(el).attr('style') || ''
+    const matches = styleAttr.matchAll(/\burl\(['"]?(.*?)['"]?\)/g)
+    for (const match of matches) {
+      if (match[1]) {
+        styleUrls.push(match[1])
+      }
+    }
+  })
+
+  const ogUrls = $('meta[property="og:url"], meta[name="twitter:url"]')
     .map((_, el) => $(el).attr('content'))
     .get()
-  const ogImages = $('meta[property="og:image"]')
+  const ogImages = $('meta[property="og:image"], meta[name="twitter:image"]')
     .map((_, el) => $(el).attr('content'))
     .get()
-  const urls = [
+
+  const rawUrls = [
     ...links,
     ...metaLinks,
     ...scripts,
     ...images,
     ...forms,
-    ...styles,
+    ...styleUrls,
     ...ogUrls,
     ...ogImages
   ]
-  const filteredUrls = urls.map(toAbsoluteUrl(parsedUrl.origin)).filter(sameDomainAs(parsedUrl.hostname))
+
+  const validUrls: string[] = []
+  for (const rawUrl of rawUrls) {
+    const normalized = normalizeUrl(rawUrl, baseUrl)
+    if (normalized && isSameDomain(normalized)) {
+      validUrls.push(normalized)
+    }
+  }
+
   return {
-    links: filteredUrls,
+    links: Array.from(new Set(validUrls)),
     data: {
       type: 'text',
       content: body.toString()
     }
   }
 }
+
