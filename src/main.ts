@@ -17,9 +17,16 @@ const configKeys = [
 const configContents = await readFile('./config.json', 'utf-8')
 const config: Record<string, any> = JSON.parse(configContents)
 
-// Init the crawler.
+// Init the configuration.
 const crawlerContext: Pick<typeof config, typeof contextKeys[number]> = pick(config, contextKeys)
 const crawlerConfig: Pick<typeof config, typeof configKeys[number]> = pick(config, configKeys)
+
+const globalConfig = Configuration.getGlobalConfig()
+for (const [key, value] of Object.entries(crawlerConfig)) {
+  globalConfig.set(key as any, value)
+}
+globalConfig.set('logLevel', LogLevel.DEBUG)
+
 const crawler = new HttpCrawler({
   ...crawlerContext,
   maxRequestsPerCrawl: crawlerContext.maxRequestsPerCrawl === null ? undefined : crawlerContext.maxRequestsPerCrawl,
@@ -38,10 +45,7 @@ const crawler = new HttpCrawler({
   },
 
   additionalMimeTypes: ['*/*'],
-}, new Configuration({
-  ...crawlerConfig,
-  logLevel: LogLevel.DEBUG,
-}))
+})
 
 // Also scrape from the sitemap, if given.
 if (config.sitemap) {
