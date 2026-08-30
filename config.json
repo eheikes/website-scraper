@@ -7,6 +7,6 @@
   "minConcurrency": 10,
   "maxConcurrency": 30,
   "maxRequestRetries": 1,
-  "requestHandlerTimeoutSecs": 30,
+  "navigationTimeoutSecs": 30,
   "maxRequestsPerCrawl": null
 }
